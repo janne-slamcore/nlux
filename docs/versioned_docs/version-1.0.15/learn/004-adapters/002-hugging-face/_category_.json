@@ -1,9 +1,0 @@
-{
-  "label": "Hugging Face Inference Adapter",
-  "collapsible": true,
-  "collapsed": true,
-  "link": {
-    "type": "generated-index",
-    "slug": "/learn/adapters/hugging-face"
-  }
-}
