@@ -20,7 +20,7 @@
     "@rollup/plugin-terser": "^0",
     "@rollup/plugin-typescript": "^11",
     "@rollup/plugin-alias": "^5",
-    "@types/react": "^18",
+    "@types/react": "^19",
     "esbuild": "^0",
     "rollup": "^4",
     "rollup-plugin-dts": "^6",
