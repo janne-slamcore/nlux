@@ -1,0 +1,31 @@
+{
+  "name": "@nlux-dev/nlbridge-react",
+  "version": "0.0.0-latest",
+  "license": "SEE LICENSE IN ROOT LICENSE FILE",
+  "scripts": {
+    "build": "rollup --config rollup.config.ts --configPlugin 'typescript={moduleResolution: \"bundler\"}'",
+    "watch": "rollup --config rollup.config.ts --configPlugin 'typescript={moduleResolution: \"bundler\"}' --watch"
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "@nlux/react": "0.0.0-latest",
+    "react": "^18"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25",
+    "@rollup/plugin-node-resolve": "^15",
+    "@rollup/plugin-replace": "^5",
+    "@rollup/plugin-strip": "^3",
+    "@rollup/plugin-terser": "^0",
+    "@rollup/plugin-typescript": "^11",
+    "@rollup/plugin-alias": "^5",
+    "rollup": "^4",
+    "rollup-plugin-dts": "^6",
+    "rollup-plugin-esbuild": "^6",
+    "tslib": "^2"
+  },
+  "main": "index.js",
+  "types": "nlbridge-react.d.ts",
+  "module": "esm/nlbridge-react.js",
+  "browser": "umd/nlbridge-react.js"
+}

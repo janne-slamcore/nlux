@@ -1,0 +1,21 @@
+{
+  "name": "@nlux-dev/themes",
+  "version": "0.0.0-latest",
+  "license": "SEE LICENSE IN ROOT LICENSE FILE",
+  "scripts": {
+    "build": "rollup --config rollup.config.ts --configPlugin 'typescript={moduleResolution: \"bundler\"}'",
+    "watch": "rollup --config rollup.config.ts --configPlugin 'typescript={moduleResolution: \"bundler\"}' --watch"
+  },
+  "dependencies": {},
+  "peerDependencies": {},
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^11",
+    "@types/postcss-import": "^14",
+    "postcss": "^8",
+    "postcss-import": "^16",
+    "postcss-csso": "^6",
+    "postcss-nested": "^6",
+    "rollup": "^4",
+    "rollup-plugin-postcss": "^4"
+  }
+}
