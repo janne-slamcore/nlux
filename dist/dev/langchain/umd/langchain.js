@@ -418,6 +418,32 @@
       return null;
     };
 
+    async function* makeTextFileDoubleLineIterator(response) {
+      const utf8Decoder = new TextDecoder("utf-8");
+      let reader = response.body.getReader();
+      let { value: chunk, done: readerDone } = await reader.read();
+      chunk = chunk ? utf8Decoder.decode(chunk, { stream: true }) : "";
+      let re = /\r?\n\r?\n/g;
+      let startIndex = 0;
+      for (; ; ) {
+        let result = re.exec(chunk);
+        if (!result) {
+          if (readerDone) {
+            break;
+          }
+          let remainder = chunk.substr(startIndex);
+          ({ value: chunk, done: readerDone } = await reader.read());
+          chunk = remainder + (chunk ? utf8Decoder.decode(chunk, { stream: true }) : "");
+          startIndex = re.lastIndex = 0;
+          continue;
+        }
+        yield chunk.substring(startIndex, result.index);
+        startIndex = re.lastIndex;
+      }
+      if (startIndex < chunk.length) {
+        yield chunk.substr(startIndex);
+      }
+    }
     class LangServeStreamAdapter extends LangServeAbstractAdapter {
       constructor(options) {
         super(options);
@@ -454,17 +480,9 @@
               message: `LangServe runnable returned status code: ${response.status}`
             });
           }
-          const reader = response.body.getReader();
-          const textDecoder = new TextDecoder();
-          let doneReading = false;
-          while (!doneReading) {
-            const { value, done } = await reader.read();
-            if (done) {
-              doneReading = true;
-              break;
-            }
-            const chunk = textDecoder.decode(value);
+          for await (const chunk of makeTextFileDoubleLineIterator(response)) {
             const chunkContent = parseChunk(chunk);
+            let error = false;
             if (Array.isArray(chunkContent)) {
               for (const aiEvent of chunkContent) {
                 if (aiEvent.event === "data" && aiEvent.data !== void 0) {
@@ -472,15 +490,19 @@
                 }
                 if (aiEvent.event === "end") {
                   observer.complete();
-                  doneReading = true;
+                  error = true;
                   break;
                 }
+                await new Promise((resolve) => setTimeout(resolve, 10));
               }
             }
             if (chunkContent instanceof Error) {
               warn(chunkContent);
               observer.error(chunkContent);
-              doneReading = true;
+              error = true;
+            }
+            if (error) {
+              break;
             }
           }
         }).catch((error) => {
